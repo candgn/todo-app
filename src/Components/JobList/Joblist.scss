@@ -1,0 +1,16 @@
+.job-list-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+@media screen and (max-width: 800px) {
+  .job-list-container {
+    flex-direction: column;
+  }
+}
+
+.job-list-wrapper {
+  margin: 2%;
+  width: 100%;
+}
