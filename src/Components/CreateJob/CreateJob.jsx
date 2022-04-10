@@ -10,11 +10,27 @@ import {
 } from "@mui/material";
 import RegexTextField from "../Common/RegexTextField";
 
+import { connect } from "react-redux";
+import { addJob } from "../../redux/reducer";
+import initialState from "./Constants";
+
 const onlyAlphanumericRegex = /[^a-z0-9]/gi;
 
-const CreateJob = ({}) => {
-  const [priority, setPriority] = useState();
-  const [jobDesc, setJobDesc] = useState("");
+const CreateJob = ({ addJob }) => {
+  const [priority, setPriority] = useState(initialState.PRIORITY);
+  const [jobDesc, setJobDesc] = useState(initialState.JOB_DESC);
+
+  const add = () => {
+    if (jobDesc === "") {
+      alert("You need to fill job description!");
+    } else if (priority === undefined) {
+      alert("You need to select priority!");
+    } else {
+      addJob({ id: Math.floor(Math.random() * 1000), jobDesc, priority });
+      setPriority(initialState.PRIORITY);
+      setJobDesc(initialState.JOB_DESC);
+    }
+  };
   return (
     <div className="create-job-container">
       {/* Job Description input field with alphanumeric values and 255 character length */}
@@ -48,7 +64,7 @@ const CreateJob = ({}) => {
       </div>
       {/* Create Job button */}
       <div className="create-job-item-wrapper" style={{ width: "10%" }}>
-        <Button variant="outlined" sx={{ width: "100%" }}>
+        <Button variant="outlined" onClick={add} sx={{ width: "100%" }}>
           Add
         </Button>
       </div>
@@ -56,4 +72,10 @@ const CreateJob = ({}) => {
   );
 };
 
-export default CreateJob;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    addJob: (obj) => dispatch(addJob(obj)),
+  };
+};
+
+export default connect(null, mapDispatchToProps)(CreateJob);
