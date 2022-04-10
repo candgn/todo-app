@@ -1,0 +1,18 @@
+.create-job-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+@media screen and (max-width: 800px) {
+  .create-job-container {
+    flex-direction: column;
+  }
+  .create-job-item-wrapper {
+    width: 100% !important;
+  }
+}
+
+.create-job-item-wrapper {
+  margin: 2%;
+}
