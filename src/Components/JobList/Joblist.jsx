@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import "./Joblist.scss";
 
 import { connect } from "react-redux";
-import { updateJob } from "../../redux/reducer";
+import { removeJob, updateJob } from "../../redux/reducer";
 
 import {
   Table,
@@ -11,6 +11,7 @@ import {
   TableRow,
   TableCell,
   TableHead,
+  Button,
 } from "@mui/material";
 import { FormControl, InputLabel } from "@mui/material";
 
@@ -32,7 +33,7 @@ const sortItems = [
   { title: "Priority", value: 2 },
 ];
 
-const Joblist = ({ jobs, updateJob }) => {
+const Joblist = ({ jobs, updateJob, removeJob }) => {
   const [jobList, setJobList] = useState([]);
   const [searchKeyword, setSearchKeyword] = useState("");
   const [sortType, setSortType] = useState(2);
@@ -67,6 +68,16 @@ const Joblist = ({ jobs, updateJob }) => {
       sortType === 2 ? a.priority - b.priority : a.jobDesc > b.jobDesc ? 1 : -1
     );
     setJobList(sorted);
+  };
+
+  // Delete Job when user clicks
+  const handleDeleteJob = (id) => {
+    // Confirmation alert to delete the job
+    var answer = window.confirm("Are you sure you want to delete it?");
+    // If answer is okay it deletes the job
+    if (answer) {
+      removeJob({ id });
+    }
   };
 
   return (
@@ -132,8 +143,10 @@ const Joblist = ({ jobs, updateJob }) => {
                       setSelected={(val) => handleUpdatePriority(item.id, val)}
                     />
                   </TableCell>
-                  <TableCell>
-                    <AiOutlineDelete style={{ fontSize: "28px" }} />
+                  <TableCell style={{ textAlign: "center" }}>
+                    <Button onClick={() => handleDeleteJob(item.id)}>
+                      <AiOutlineDelete style={{ fontSize: "28px" }} />
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
@@ -154,6 +167,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     updateJob: (obj) => dispatch(updateJob(obj)),
+    removeJob: (obj) => dispatch(removeJob(obj)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Joblist);

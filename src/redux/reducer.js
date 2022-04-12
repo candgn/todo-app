@@ -23,8 +23,11 @@ const jobReducer = createSlice({
         return job;
       });
     },
+    removeJob: (state, action) => {
+      return state.filter((job) => job.id !== action.payload.id);
+    },
   },
 });
 
-export const { addJob, updateJob } = jobReducer.actions;
+export const { addJob, updateJob, removeJob } = jobReducer.actions;
 export const reducer = jobReducer.reducer;
