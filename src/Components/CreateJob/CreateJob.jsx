@@ -1,18 +1,15 @@
 import React, { useState } from "react";
 import "./CreateJob.scss";
 
-import {
-  Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-} from "@mui/material";
+import { Button, FormControl, InputLabel } from "@mui/material";
 import RegexTextField from "../Common/RegexTextField";
 
 import { connect } from "react-redux";
 import { addJob } from "../../redux/reducer";
 import initialState from "./Constants";
+import SelectItem from "../Common/SelectItem";
+
+import Constants from "./Constants";
 
 const onlyAlphanumericRegex = /[^a-z0-9]/gi;
 
@@ -23,7 +20,7 @@ const CreateJob = ({ addJob }) => {
   const add = () => {
     if (jobDesc === "") {
       alert("You need to fill job description!");
-    } else if (priority === undefined) {
+    } else if (priority === "") {
       alert("You need to select priority!");
     } else {
       addJob({ id: Math.floor(Math.random() * 1000), jobDesc, priority });
@@ -48,18 +45,11 @@ const CreateJob = ({ addJob }) => {
       <div className="create-job-item-wrapper" style={{ width: "20%" }}>
         <FormControl fullWidth>
           <InputLabel id="priority-select-label">Priority</InputLabel>
-          <Select
-            labelId="priority-select-label"
-            id="priority-select"
-            value={priority}
-            label="Priority"
-            sx={{ width: "100%" }}
-            onChange={(e) => setPriority(e.target.value)}
-          >
-            <MenuItem value={1}>Trivial</MenuItem>
-            <MenuItem value={2}>Regular</MenuItem>
-            <MenuItem value={3}>Urgent</MenuItem>
-          </Select>
+          <SelectItem
+            data={Constants.SELECT_PRIORITY}
+            selected={priority}
+            setSelected={setPriority}
+          />
         </FormControl>
       </div>
       {/* Create Job button */}

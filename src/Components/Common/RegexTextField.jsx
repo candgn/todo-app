@@ -14,6 +14,7 @@ const RegexTextField = ({ length, regex, onChange, ...rest }) => {
         onChange(e);
       }
     },
+    // eslint-disable-next-line
     [onChange, regex]
   );
 

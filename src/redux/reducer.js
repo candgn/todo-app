@@ -12,8 +12,19 @@ const jobReducer = createSlice({
       state.push(action.payload);
       return state;
     },
+    updateJob: (state, action) => {
+      return state.map((job) => {
+        if (job.id === action.payload.id) {
+          return {
+            ...job,
+            priority: action.payload.priority,
+          };
+        }
+        return job;
+      });
+    },
   },
 });
 
-export const { addJob } = jobReducer.actions;
+export const { addJob, updateJob } = jobReducer.actions;
 export const reducer = jobReducer.reducer;

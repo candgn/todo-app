@@ -3,7 +3,7 @@ import React from "react";
 import "./SearchBar.scss";
 import { AiOutlineSearch } from "react-icons/ai";
 
-const SearchBar = ({}) => {
+const SearchBar = ({ onSearch }) => {
   return (
     <div className="search-bar-container">
       <TextField
@@ -14,7 +14,7 @@ const SearchBar = ({}) => {
         InputProps={{
           endAdornment: <AiOutlineSearch style={{ fontSize: "24px" }} />,
         }}
-        // onChange={onSearch}
+        onChange={(e) => onSearch(e.target.value)}
       />
     </div>
   );
