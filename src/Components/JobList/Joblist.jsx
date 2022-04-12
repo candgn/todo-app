@@ -32,12 +32,13 @@ const Joblist = ({ jobs, updateJob }) => {
   const [jobList, setJobList] = useState([]);
   const [searchKeyword, setSearchKeyword] = useState("");
   const [sortType, setSortType] = useState(2);
+  const [priorityFilter, setPriorityFilter] = useState([1, 2, 3]);
 
   // Sort and filter list when selected sort type or searchkeyword changed
   useEffect(() => {
     handleSort(sortType);
     // eslint-disable-next-line
-  }, [jobs, sortType, searchKeyword]);
+  }, [jobs, sortType, searchKeyword, priorityFilter]);
 
   //Update Jobs priority
   const handleUpdatePriority = (id, priority) => {
@@ -46,15 +47,18 @@ const Joblist = ({ jobs, updateJob }) => {
 
   const handleSort = (sortType) => {
     // Filter joblist when inputs given to searchbar
-    const filtered = [...jobs].filter((item) => {
+    const keywordFiltered = [...jobs].filter((item) => {
       if (searchKeyword === "") {
         return item;
       } else {
         return item.jobDesc.toLowerCase().includes(searchKeyword);
       }
     });
+    const priorityFiltered = [...keywordFiltered].filter((item) =>
+      priorityFilter.includes(item.priority)
+    );
     // sort filtered joblist
-    const sorted = [...filtered].sort((a, b) =>
+    const sorted = [...priorityFiltered].sort((a, b) =>
       sortType === 2 ? a.priority - b.priority : a.jobDesc > b.jobDesc ? 1 : -1
     );
     setJobList(sorted);
@@ -79,8 +83,8 @@ const Joblist = ({ jobs, updateJob }) => {
           <SelectItem
             multiple={true}
             data={Constants.SELECT_PRIORITY}
-            selected={[]}
-            // setSelected={(val) => handleFilter(val)}
+            selected={priorityFilter}
+            setSelected={(val) => setPriorityFilter(val)}
           />
         </FormControl>
       </div>
