@@ -11,7 +11,7 @@ import SelectItem from "../Common/SelectItem";
 
 import Constants from "./Constants";
 
-const onlyAlphanumericRegex = /[^a-z0-9]/gi;
+const onlyAlphanumericRegex = /[^a-zA-Z0-9\_\s]/g;
 
 const CreateJob = ({ addJob }) => {
   const [priority, setPriority] = useState(initialState.PRIORITY);

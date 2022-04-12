@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
 
+import "./Joblist.scss";
+
+import { connect } from "react-redux";
+import { updateJob } from "../../redux/reducer";
+
 import {
   Table,
   TableBody,
@@ -9,13 +14,12 @@ import {
 } from "@mui/material";
 import { FormControl, InputLabel } from "@mui/material";
 
-import { connect } from "react-redux";
-import { updateJob } from "../../redux/reducer";
 import SearchBar from "../Common/SearchBar/SearchBar";
-import "./Joblist.scss";
+import SelectItem from "../Common/SelectItem";
+
+import { AiOutlineDelete } from "react-icons/ai";
 
 import Constants from "../CreateJob/Constants";
-import SelectItem from "../Common/SelectItem";
 
 const columns = [
   { title: "Job Description" },
@@ -36,7 +40,7 @@ const Joblist = ({ jobs, updateJob }) => {
 
   // Sort and filter list when selected sort type or searchkeyword changed
   useEffect(() => {
-    handleSort(sortType);
+    handleFilter(sortType);
     // eslint-disable-next-line
   }, [jobs, sortType, searchKeyword, priorityFilter]);
 
@@ -45,8 +49,8 @@ const Joblist = ({ jobs, updateJob }) => {
     updateJob({ id, priority });
   };
 
-  const handleSort = (sortType) => {
-    // Filter joblist when inputs given to searchbar
+  const handleFilter = (sortType) => {
+    // Filter job list when inputs given to searchbar
     const keywordFiltered = [...jobs].filter((item) => {
       if (searchKeyword === "") {
         return item;
@@ -54,10 +58,11 @@ const Joblist = ({ jobs, updateJob }) => {
         return item.jobDesc.toLowerCase().includes(searchKeyword);
       }
     });
+    //Filters job list according to priority filter
     const priorityFiltered = [...keywordFiltered].filter((item) =>
       priorityFilter.includes(item.priority)
     );
-    // sort filtered joblist
+    // sort filtered job list
     const sorted = [...priorityFiltered].sort((a, b) =>
       sortType === 2 ? a.priority - b.priority : a.jobDesc > b.jobDesc ? 1 : -1
     );
@@ -66,10 +71,13 @@ const Joblist = ({ jobs, updateJob }) => {
 
   return (
     <div className="job-list-container">
+      {/* Search bar */}
       <div className="job-list-wrapper">
         <SearchBar onSearch={setSearchKeyword} />
       </div>
+      {/* Filter Area */}
       <div className="job-list-filter-wrapper">
+        {/* Sort Box */}
         <FormControl fullWidth style={{ marginRight: "5px" }}>
           <InputLabel id="priority-select-label">Sort</InputLabel>
           <SelectItem
@@ -78,6 +86,7 @@ const Joblist = ({ jobs, updateJob }) => {
             setSelected={(val) => setSortType(val)}
           />
         </FormControl>
+        {/* Priority Filter */}
         <FormControl fullWidth style={{ marginLeft: "5px" }}>
           <InputLabel id="priority-select-label">Filter</InputLabel>
           <SelectItem
@@ -88,9 +97,11 @@ const Joblist = ({ jobs, updateJob }) => {
           />
         </FormControl>
       </div>
+      {/* Job list table */}
       <div className="job-list-wrapper">
         <div style={{ height: 400, width: "100%" }}>
           <Table>
+            {/* Job list table titles */}
             <TableHead>
               <TableRow>
                 {columns.map((item, i) => (
@@ -98,10 +109,12 @@ const Joblist = ({ jobs, updateJob }) => {
                 ))}
               </TableRow>
             </TableHead>
+            {/* Job list table body rows */}
             <TableBody>
               {jobList?.map((item, i) => (
                 <TableRow key={"table-row-" + i}>
                   <TableCell>{item.jobDesc}</TableCell>
+                  {/* Color map according to priority 1 => Urgent (red) 2 => Regular (orange) 3 => Trivial (Orange) */}
                   <TableCell
                     style={{
                       background:
@@ -112,13 +125,16 @@ const Joblist = ({ jobs, updateJob }) => {
                           : "#7CFC0060",
                     }}
                   >
+                    {/* Job list edit and show priority */}
                     <SelectItem
                       data={Constants.SELECT_PRIORITY}
                       selected={item.priority}
                       setSelected={(val) => handleUpdatePriority(item.id, val)}
                     />
                   </TableCell>
-                  <TableCell></TableCell>
+                  <TableCell>
+                    <AiOutlineDelete style={{ fontSize: "28px" }} />
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
